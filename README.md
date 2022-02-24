@@ -14,12 +14,17 @@ The freshness of the data depends of the UAV's flight trajectory.
 To decide the trajectory, Deep Reinforcement Learning is a good method and useful 
 # About this repository folders and files
 
-| TH  |  TH  |
+| **Name**  |  **Description**  |
 | --  |  --  |
+| Environment1  |  TD  |
+| Environment2  |  TD  |
+| Combination  |  TD  |
+| TD  |  TD  |
 | TD  |  TD  |
 | TD  |  TD  |
 
 # Experiment
 # Citation
 # Acknowledgemen
+
 
