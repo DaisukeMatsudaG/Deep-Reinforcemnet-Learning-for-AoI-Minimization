@@ -19,9 +19,9 @@ To decide the trajectory, Deep Reinforcement Learning is a good method and usefu
 | Environment1  |  TD  |
 | Environment2  |  TD  |
 | Combination  |  TD  |
-| Results1  |  TD  |
-| Results2  |  TD  |
-| Results3  |  TD  |
+| Results1  |  Experiment results of Environment1  |
+| Results2  |  Experiment results of Environment2  |
+| Results3  |  Experiment results of the Combination  |
 
 # Experiment
 # Citation
