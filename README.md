@@ -9,8 +9,11 @@
   
   [5.Acknowledgement](#Acknowledgement)
 # Introduction
-Reinforcement Learning 
+The freshness of the data is important in UAV aided data collections.
+The freshness of the data depends of the UAV's flight trajectory.
+To decide the trajectory, Deep Reinforcement Learning is a good method 
 # About this repository folders and files
 # Experiment
 # Citation
 # Acknowledgement
+
