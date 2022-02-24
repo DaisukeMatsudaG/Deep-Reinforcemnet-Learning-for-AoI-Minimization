@@ -1,9 +1,13 @@
 # Contents
-1.Introduction
-2.About this repository folders and files
-2.Experiment
-3.Citation
-4.Acknowledgement
+  1.Introduction
+
+  2.About this repository folders and files
+  
+  3.Experiment
+  
+  4.Citation
+  
+  5.Acknowledgement
 ## Introduction
 Reinforcement Learning 
 # About this repository folders and files
