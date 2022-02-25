@@ -18,10 +18,12 @@ To decide the trajectory, Deep Reinforcement Learning is a good method and usefu
 | --  |  --  |
 | Environment1  |  TD  |
 | Environment2  |  TD  |
+| Latency  |  TD  |
 | Combination  |  TD  |
 | Results1  |  Experiment results of **Environment1**  |
 | Results2  |  Experiment results of **Environment2**  |
-| Results3  |  Experiment results of **Combination**  |
+| Results3  |  Experiment results of **Latency**  |
+| Results4  |  Experiment results of **Combination**  |
 
 # Experiment
 Make the directory to your google drive and copy the Experiment file .ipynb to google colab and execute.
