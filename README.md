@@ -24,6 +24,7 @@ To decide the trajectory, Deep Reinforcement Learning is a good method and usefu
 | Results3  |  Experiment results of **Combination**  |
 
 # Experiment
+Make the directory to your google drive and copy the Experiment file .ipynb to google colab and execute.
 # Citation
 # Acknowledgemen
 
