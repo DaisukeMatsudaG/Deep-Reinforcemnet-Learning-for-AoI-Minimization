@@ -1,0 +1,11 @@
+[19, 24, 14, 4, 29, 14, 14, 19, 4]
+total_episode_reward11.931254996003208total_episode_ave_AoI11.931254996003208[19, 24, 14, 4, 29, 14, 14, 19, 4]
+total_episode_reward11.931254996003208total_episode_ave_AoI11.931254996003208[19, 24, 14, 4, 29, 14, 14, 19, 4]
+total_episode_reward11.931254996003208total_episode_ave_AoI11.931254996003208[19, 24, 14, 4, 29, 14, 14, 19, 4]
+total_episode_reward11.931254996003208total_episode_ave_AoI11.931254996003208[19, 24, 14, 4, 29, 14, 14, 19, 4]
+total_episode_reward11.931254996003208total_episode_ave_AoI11.931254996003208[19, 24, 14, 4, 29, 14, 14, 19, 4]
+total_episode_reward11.931254996003208total_episode_ave_AoI11.931254996003208[19, 24, 14, 4, 29, 14, 14, 19, 4]
+total_episode_reward11.931254996003208total_episode_ave_AoI11.931254996003208[19, 24, 14, 4, 29, 14, 14, 19, 4]
+total_episode_reward11.931254996003208total_episode_ave_AoI11.931254996003208[19, 24, 14, 4, 29, 14, 14, 19, 4]
+total_episode_reward11.931254996003208total_episode_ave_AoI11.931254996003208[19, 24, 14, 4, 29, 14, 14, 19, 4]
+total_episode_reward11.931254996003208total_episode_ave_AoI11.931254996003208
