@@ -1,0 +1,11 @@
+[13, 18, 28, 23, 8]
+total_episode_reward13.932374100719423total_episode_ave_AoI13.932374100719423[13, 18, 28, 23, 8]
+total_episode_reward13.932374100719423total_episode_ave_AoI13.932374100719423[13, 18, 28, 23, 8]
+total_episode_reward13.932374100719423total_episode_ave_AoI13.932374100719423[13, 18, 28, 23, 8]
+total_episode_reward13.932374100719423total_episode_ave_AoI13.932374100719423[13, 18, 28, 23, 8]
+total_episode_reward13.932374100719423total_episode_ave_AoI13.932374100719423[13, 18, 28, 23, 8]
+total_episode_reward13.932374100719423total_episode_ave_AoI13.932374100719423[13, 18, 28, 23, 8]
+total_episode_reward13.932374100719423total_episode_ave_AoI13.932374100719423[13, 18, 28, 23, 8]
+total_episode_reward13.932374100719423total_episode_ave_AoI13.932374100719423[13, 18, 28, 23, 8]
+total_episode_reward13.932374100719423total_episode_ave_AoI13.932374100719423[13, 18, 28, 23, 8]
+total_episode_reward13.932374100719423total_episode_ave_AoI13.932374100719423

@@ -1,0 +1,11 @@
+[14, 19, 14, 24, 9, 9]
+total_episode_reward9.173860911270982[14, 19, 14, 24, 9, 9]
+total_episode_reward9.173860911270982[14, 19, 14, 24, 9, 9]
+total_episode_reward9.173860911270982[14, 19, 14, 24, 9, 9]
+total_episode_reward9.173860911270982[14, 19, 14, 24, 9, 9]
+total_episode_reward9.173860911270982[14, 19, 14, 24, 9, 9]
+total_episode_reward9.173860911270982[14, 19, 14, 24, 9, 9]
+total_episode_reward9.173860911270982[14, 19, 14, 24, 9, 9]
+total_episode_reward9.173860911270982[14, 19, 14, 24, 9, 9]
+total_episode_reward9.173860911270982[14, 19, 14, 24, 9, 9]
+total_episode_reward9.173860911270982

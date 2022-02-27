@@ -1,0 +1,11 @@
+[23, 28, 38, 33, 60, 3, 33, 43, 48]
+total_episode_reward21.09592326139089total_episode_ave_AoI21.09592326139089[23, 28, 38, 33, 60, 3, 33, 43, 48]
+total_episode_reward21.09592326139089total_episode_ave_AoI21.09592326139089[23, 28, 38, 33, 60, 3, 33, 43, 48]
+total_episode_reward21.09592326139089total_episode_ave_AoI21.09592326139089[23, 28, 38, 33, 60, 3, 33, 43, 48]
+total_episode_reward21.09592326139089total_episode_ave_AoI21.09592326139089[23, 28, 38, 33, 60, 3, 33, 43, 48]
+total_episode_reward21.09592326139089total_episode_ave_AoI21.09592326139089[23, 28, 38, 33, 60, 3, 33, 43, 48]
+total_episode_reward21.09592326139089total_episode_ave_AoI21.09592326139089[23, 28, 38, 33, 60, 3, 33, 43, 48]
+total_episode_reward21.09592326139089total_episode_ave_AoI21.09592326139089[23, 28, 38, 33, 60, 3, 33, 43, 48]
+total_episode_reward21.09592326139089total_episode_ave_AoI21.09592326139089[23, 28, 38, 33, 60, 3, 33, 43, 48]
+total_episode_reward21.09592326139089total_episode_ave_AoI21.09592326139089[23, 28, 38, 33, 60, 3, 33, 43, 48]
+total_episode_reward21.09592326139089total_episode_ave_AoI21.09592326139089
