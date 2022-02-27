@@ -1,4 +1,3 @@
-
 !nvidia-smi
 !apt-get install -y -qq software-properties-common python-software-properties module-init-tools
 !add-apt-repository -y ppa:alessandro-strada/ppa 2>&1 > /dev/null
@@ -218,7 +217,7 @@ class AoI(gym.Env): # (1)
         self.amount_AoI = sum(self.AoI_list)
         self.reward = self.amount_AoI / self.amount_SN
 
-        if  (0<=self.agent_pos_1[0]<=100 and 0<=self.agent_pos_1[1]<=100) or (0<=self.agent_pos_1[0]<=100 and 300<=self.agent_pos_1[1]<=400) or (300<=self.agent_pos_1[0]<=400 and 0<=self.agent_pos_1[1]<=100) or (300<=self.agent_pos_1[0]<=400 and 300<=self.agent_pos_1[1]<=400):
+        if 300<=self.agent_pos_1[0]<=400:
           self.state_list_3 = [self.time_slot,self.agent_pos_1[0],self.agent_pos_1[1]]
           for iS in range(amount_SN):
             self.state_list_3.append(self.AoI_list_UAV_1[iS])
@@ -235,7 +234,7 @@ class AoI(gym.Env): # (1)
 
 
         #遠隔制御判定_UAV_2
-        if  (0<=self.agent_pos_2[0]<=100 and 0<=self.agent_pos_2[1]<=100) or (0<=self.agent_pos_2[0]<=100 and 300<=self.agent_pos_2[1]<=400) or (300<=self.agent_pos_2[0]<=400 and 0<=self.agent_pos_2[1]<=100) or (300<=self.agent_pos_2[0]<=400 and 300<=self.agent_pos_2[1]<=400):
+        if 300<=self.agent_pos_2[0]<=400:
           self.state_list_4 = [self.time_slot,self.agent_pos_2[0],self.agent_pos_2[1]]
           for iS in range(amount_SN):
             self.state_list_4.append(self.AoI_list_UAV_2[iS])
@@ -497,7 +496,7 @@ class AoI(gym.Env): # (1)
         #self.com_poor_1 = np.random.random()
         #self.com_poor_2 = np.random.random()
         self.state_AoI_list = self.AoI_list
-        if  (0<=self.agent_pos_1[0]<=100 and 0<=self.agent_pos_1[1]<=100) or (0<=self.agent_pos_1[0]<=100 and 300<=self.agent_pos_1[1]<=400) or (300<=self.agent_pos_1[0]<=400 and 0<=self.agent_pos_1[1]<=100) or (300<=self.agent_pos_1[0]<=400 and 300<=self.agent_pos_1[1]<=400):
+        if 300<=self.agent_pos_1[0]<=400:
           self.duration_time_of_UAV_1=1
         else:
           self.duration_time_of_UAV_1=0
@@ -507,7 +506,7 @@ class AoI(gym.Env): # (1)
             self.state_AoI_list[iS]=min(self.AoI_list_UAV_1[iS],self.state_AoI_list[iS])
 
 
-        if  (0<=self.agent_pos_2[0]<=100 and 0<=self.agent_pos_2[1]<=100) or (0<=self.agent_pos_2[0]<=100 and 300<=self.agent_pos_2[1]<=400) or (300<=self.agent_pos_2[0]<=400 and 0<=self.agent_pos_2[1]<=100) or (300<=self.agent_pos_2[0]<=400 and 300<=self.agent_pos_2[1]<=400):
+        if 300<=self.agent_pos_2[0]<=400:
           self.duration_time_of_UAV_2=1
         else:
           self.duration_time_of_UAV_2=0
@@ -787,6 +786,9 @@ class Agent:
               average_BS_reward_1_collection_times=sum_BS_reward_1/data[0][1]
               total_average_reward_1_collection_times.append(average_reward_1_collection_times)
               total_average_BS_reward_1_collection_times.append(average_BS_reward_1_collection_times)
+            else:
+              total_average_reward_1_collection_times.append(0)
+              total_average_BS_reward_1_collection_times.append(0)
 
             average_reward_2_duration_time = None
             average_reward_2_duration_time = None
@@ -806,6 +808,10 @@ class Agent:
               average_BS_reward_2_collection_times=sum_BS_reward_2/data[1][1]
               total_average_reward_2_collection_times.append(average_reward_2_collection_times)
               total_average_BS_reward_2_collection_times.append(average_BS_reward_2_collection_times)
+            else:
+              total_average_reward_2_collection_times.append(0)
+              total_average_BS_reward_2_collection_times.append(0)
+                
 
 
             ######AoI_list=[int(state[1+2*2+i]) for i in range(amount_SN)]
@@ -871,7 +877,7 @@ class Agent:
 file_name_1 = '5_0_e_5_timeslot'
 result_dir_1 = '/content/drive/MyDrive/modi_env/MADQN/9000_3times/200/SN'+str(args.amount_SN)+'/'+str(file_name_1)
 file_name_2 = '1_0_e_3_timeslot'
-file_name = 'change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_first_and_first'
+file_name = 'another_change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_first_and_first'
 result_dir_2 = '/content/drive/MyDrive/modi_env/no_DQN_for_MARL/epsilon/SN'+str(args.amount_SN)+'/'+str(file_name_2)
 result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_No_DQN_for_MARL/'+str(file_name)
 if not os.path.exists(result_dir):
@@ -885,7 +891,7 @@ if __name__ == "__main__":
 
 file_name_2 = '1_0_e_3_timeslot_again'
 result_dir_2 = '/content/drive/MyDrive/modi_env/no_DQN_for_MARL/epsilon/SN'+str(args.amount_SN)+'/'+str(file_name_2)
-file_name = 'change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_first_and_second'
+file_name = 'another_change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_first_and_second'
 result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_No_DQN_for_MARL/'+str(file_name)
 if not os.path.exists(result_dir):
     os.mkdir(result_dir)
@@ -898,7 +904,7 @@ if __name__ == "__main__":
 
 file_name_2 = '1_0_e_3_timeslot_third'
 result_dir_2 = '/content/drive/MyDrive/modi_env/no_DQN_for_MARL/epsilon/SN'+str(args.amount_SN)+'/'+str(file_name_2)
-file_name = 'change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_first_and_third'
+file_name = 'another_change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_first_and_third'
 result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_No_DQN_for_MARL/'+str(file_name)
 if not os.path.exists(result_dir):
     os.mkdir(result_dir)
@@ -915,7 +921,7 @@ file_name_1 = '5_0_e_5_timeslot_again'
 result_dir_1 = '/content/drive/MyDrive/modi_env/MADQN/9000_3times/200/SN'+str(args.amount_SN)+'/'+str(file_name_1)
 file_name_2 = '1_0_e_3_timeslot'
 result_dir_2 = '/content/drive/MyDrive/modi_env/no_DQN_for_MARL/epsilon/SN'+str(args.amount_SN)+'/'+str(file_name_2)
-file_name = 'change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_second_and_first'
+file_name = 'another_change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_second_and_first'
 result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_No_DQN_for_MARL/'+str(file_name)
 if not os.path.exists(result_dir):
     os.mkdir(result_dir)
@@ -928,7 +934,7 @@ if __name__ == "__main__":
 
 file_name_2 = '1_0_e_3_timeslot_again'
 result_dir_2 = '/content/drive/MyDrive/modi_env/no_DQN_for_MARL/epsilon/SN'+str(args.amount_SN)+'/'+str(file_name_2)
-file_name = 'change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_second_and_second'
+file_name = 'another_change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_second_and_second'
 result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_No_DQN_for_MARL/'+str(file_name)
 if not os.path.exists(result_dir):
     os.mkdir(result_dir)
@@ -941,7 +947,7 @@ if __name__ == "__main__":
 
 file_name_2 = '1_0_e_3_timeslot_third'
 result_dir_2 = '/content/drive/MyDrive/modi_env/no_DQN_for_MARL/epsilon/SN'+str(args.amount_SN)+'/'+str(file_name_2)
-file_name = 'change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_second_and_third'
+file_name = 'another_change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_second_and_third'
 result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_No_DQN_for_MARL/'+str(file_name)
 if not os.path.exists(result_dir):
     os.mkdir(result_dir)
@@ -957,7 +963,7 @@ file_name_1 = '5_0_e_5_timeslot_third'
 result_dir_1 = '/content/drive/MyDrive/modi_env/MADQN/9000_3times/200/SN'+str(args.amount_SN)+'/'+str(file_name_1)
 file_name_2 = '1_0_e_3_timeslot'
 result_dir_2 = '/content/drive/MyDrive/modi_env/no_DQN_for_MARL/epsilon/SN'+str(args.amount_SN)+'/'+str(file_name_2)
-file_name = 'change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_third_and_first'
+file_name = 'another_change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_third_and_first'
 result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_No_DQN_for_MARL/'+str(file_name)
 if not os.path.exists(result_dir):
     os.mkdir(result_dir)
@@ -970,7 +976,7 @@ if __name__ == "__main__":
 
 file_name_2 = '1_0_e_3_timeslot_again'
 result_dir_2 = '/content/drive/MyDrive/modi_env/no_DQN_for_MARL/epsilon/SN'+str(args.amount_SN)+'/'+str(file_name_2)
-file_name = 'change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_third_and_second'
+file_name = 'another_change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_third_and_second'
 result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_No_DQN_for_MARL/'+str(file_name)
 if not os.path.exists(result_dir):
     os.mkdir(result_dir)
@@ -983,7 +989,7 @@ if __name__ == "__main__":
 
 file_name_2 = '1_0_e_3_timeslot_third'
 result_dir_2 = '/content/drive/MyDrive/modi_env/no_DQN_for_MARL/epsilon/SN'+str(args.amount_SN)+'/'+str(file_name_2)
-file_name = 'change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_third_and_third'
+file_name = 'another_change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_third_and_third'
 result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_No_DQN_for_MARL/'+str(file_name)
 if not os.path.exists(result_dir):
     os.mkdir(result_dir)
