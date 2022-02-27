@@ -1,4 +1,7 @@
-Each file can 
+Each file is that UAVs are controled from Base Station(BS) and on the UAV.
+
+We have to control UAVs each way.
+The relation between file name and Combination are shown below.
 
 | Name  | Combination |
 | --  | --  |
@@ -10,4 +13,3 @@ Each file can
 | total_system_same_2  | R-MADQN(Ours) &  R-MADQN(Ours) |
 
 You have to change the name of 'filename_1', 'filename_2', 'result_dir_1', 'result_dir_2', 'result_dir', 'file_name' (from about 700 to about 850 lines) to the coresponding directories.
-
