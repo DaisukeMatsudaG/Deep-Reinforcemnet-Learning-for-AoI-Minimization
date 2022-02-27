@@ -5,7 +5,6 @@
   
   [3.Experiment](#Experiment)
     
-  [4.Acknowledgement](#Acknowledgement)
 # Introduction
 The freshness of the data is important in UAV aided data collections.
 The freshness of the data depends of the UAV's flight trajectory.
