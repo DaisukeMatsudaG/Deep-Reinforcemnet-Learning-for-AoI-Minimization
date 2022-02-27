@@ -34,6 +34,7 @@ import tensorflow as tf
 print('TensorFlow', tf.__version__)
 from tensorflow.keras.layers import InputLayer, Dense
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.models import Model
 import gym
 import os
 import argparse
@@ -68,25 +69,24 @@ print(args.amount_SN)
 amount_SN = args.amount_SN#超重要！この行の３行後も変えなさい！！
 
 
-#MADQN
-file_name_1 = '5_0_e_5_timeslot'
+#DQN_for_MARL
+file_name_1 = '5_0_e_4_timeslot'
 #no_DQN_for_MARL#1_0_e_3か!!
-file_name_2 = '1_0_e_3_timeslot'
-file_name = 'change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_first_and_first'
+#R_MANDQ#1_0_e_4
+file_name_2 = '1_0_e_4_timeslot'
+file_name = '1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_first_and_first'
 #file_name = 'check'
 
 
-
-
-#result_dir_1 = '/content/drive/MyDrive/modi_env/DQN_for_MARL/epsilon/SN'+str(args.amount_SN)+'/'+str(file_name_1)
-result_dir_1 = '/content/drive/MyDrive/modi_env/MADQN/9000_3times/200/SN'+str(args.amount_SN)+'/'+str(file_name_1)
-result_dir_2 = '/content/drive/MyDrive/modi_env/no_DQN_for_MARL/epsilon/SN'+str(args.amount_SN)+'/'+str(file_name_2)
-#result_dir_2 = '/content/drive/MyDrive/modi_env/improve_R_MADQN/epsilon/5state_1recurrent/modify/200/SN'+str(args.amount_SN)+'/'+str(file_name_2)
-result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_No_DQN_for_MARL/'+str(file_name)
+result_dir_1 = '/content/drive/MyDrive/modi_env/DQN_for_MARL/epsilon/SN'+str(args.amount_SN)+'/'+str(file_name_1)
+#result_dir_1 = '/content/drive/MyDrive/modi_env/MADQN/9000_3times/200/SN'+str(args.amount_SN)+'/'+str(file_name_1)
+#result_dir_2 = '/content/drive/MyDrive/modi_env/no_DQN_for_MARL/epsilon/SN'+str(args.amount_SN)+'/'+str(file_name_2)
+result_dir_2 = '/content/drive/MyDrive/modi_env/improve_R_MADQN/epsilon/5state_1reccurent/modify/200/SN'+str(args.amount_SN)+'/'+str(file_name_2)
+result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_R_MADQN/'+str(file_name)
+#result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/DQN_for_MARL_and_R_MADQN/'+str(file_name)
+#result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/DQN_for_MARL_and_R_MADQN/'+str(file_name)
+#result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/DQN_for_MARL_and_R_MADQN/'+str(file_name)
 #result_dir = '/content/drive/MyDrive/modi_env/total_system/DQN_for_MARL_R_MADQN/SN'+str(args.amount_SN)+'/'+str(file_name)
-
-if not os.path.exists(result_dir):
-    os.mkdir(result_dir)
 
 class AoI(gym.Env): # (1)
     # 定数を定義
@@ -104,8 +104,8 @@ class AoI(gym.Env): # (1)
         self.result_dir_2 = result_dir_2
         self.file_name_2 = file_name_2
         self.model = ActionStateModel(1+2*2+amount_SN, 4)
-        self.model.model_3.load_weights(os.path.join(self.result_dir_2, str(self.file_name_2)+"_model_1.h5"))
-        self.model.model_4.load_weights(os.path.join(self.result_dir_2, str(self.file_name_2)+"_model_2.h5"))
+        #self.model.model_3.load_weights(os.path.join(self.result_dir_2, str(self.file_name_2)+"_model_1.h5"))
+        #self.model.model_4.load_weights(os.path.join(self.result_dir_2, str(self.file_name_2)+"_model_2.h5"))
         
         super(AoI, self).__init__()
         # 初期位置の指定
@@ -135,7 +135,6 @@ class AoI(gym.Env): # (1)
         self.action_space = gym.spaces.Discrete(4)
         self.observation_space = gym.spaces.Box(low=0, high=321, shape=(1+2*2+self.amount_SN,))        
 
-        
     # 環境のリセット (3)
     def reset(self):
         self.time_slot=0
@@ -161,12 +160,27 @@ class AoI(gym.Env): # (1)
         self.U_list_UAV_1=[1 for iU in range(self.amount_SN)]#U(-1+1)
         self.U_list_UAV_2=[1 for iU in range(self.amount_SN)]#U(-1+1)
 
-        self.state_list_3=[self.time_slot,self.agent_pos_1[0],self.agent_pos_1[1]]
-        self.state_list_4=[self.time_slot,self.agent_pos_2[0],self.agent_pos_2[1]]
+        self.state_3=[self.time_slot,self.agent_pos_1[0],self.agent_pos_1[1]]
+        self.state_4=[self.time_slot,self.agent_pos_2[0],self.agent_pos_2[1]]
         
         for i in range(self.amount_SN):
-          self.state_list_3.append(self.AoI_list_UAV_1[i])
-          self.state_list_4.append(self.AoI_list_UAV_2[i])
+          self.state_3.append(self.AoI_list_UAV_1[i])
+          self.state_4.append(self.AoI_list_UAV_2[i])
+        
+        self.state_list_3 = np.array([self.state_3,self.state_3,self.state_3,self.state_3,self.state_3])
+        self.state_list_4 = np.array([self.state_4,self.state_4,self.state_4,self.state_4,self.state_4])
+
+
+        self.state_list = [self.time_slot,self.agent_pos_1[0], self.agent_pos_1[1],self.agent_pos_2[0],self.agent_pos_2[1]]
+
+
+        for i in range(self.amount_SN):
+          self.state_list.append(self.AoI_list[i])
+        self.state = np.array(self.state_list)
+
+        self.return_state_3 = self.state
+        self.return_state_4 = self.state
+
 
         self.duration_time_of_UAV_1 = 0
         self.duration_time_of_UAV_2 = 0
@@ -174,13 +188,7 @@ class AoI(gym.Env): # (1)
         self.total_duration_time_of_UAV_1 = 0
         self.total_duration_time_of_UAV_2 = 0
 
-        self.state_list_3 = np.array(self.state_list_3)
-        self.state_list_4 = np.array(self.state_list_4)
 
-        self.state_list = [self.time_slot,self.agent_pos_1[0], self.agent_pos_1[1],self.agent_pos_2[0],self.agent_pos_2[1]]
-        for i in range(self.amount_SN):
-          self.state_list.append(self.AoI_list[i])
-        self.state = np.array(self.state_list)
 
         self.check_list=[]
         for i in range(amount_SN):
@@ -204,10 +212,9 @@ class AoI(gym.Env): # (1)
         self.local_collection_times_1 = 0
         self.local_collection_times_2 = 0
 
-        return self.state
-
-      # 環境の1ステップ実行 (3)
-      # 環境の1ステップ実行 (3)
+        return self.state        
+        
+    # 環境のリセット (3)
     def step(self, action_1, action_2):
         #こっから先はn+1の時のこと。ここへきてa(n)をagent(n)に反映
         #args.duration_threshold
@@ -217,36 +224,59 @@ class AoI(gym.Env): # (1)
         self.amount_AoI = sum(self.AoI_list)
         self.reward = self.amount_AoI / self.amount_SN
 
-        if 300<=self.agent_pos_1[0]<=400:
-          self.state_list_3 = [self.time_slot,self.agent_pos_1[0],self.agent_pos_1[1]]
+        if  300<=self.agent_pos_1[0]<=400:
+          self.state_3 = [self.time_slot,self.agent_pos_1[0],self.agent_pos_1[1]]
           for iS in range(amount_SN):
-            self.state_list_3.append(self.AoI_list_UAV_1[iS])
-
-          self.state_list_3 = np.array(self.state_list_3)
-          action_1 = self.model.test_get_action_3(self.state_list_3)
+            self.state_3.append(self.AoI_list_UAV_1[iS])
+          self.state_3 = np.array(self.state_3)
+          self.state_list_3 = np.vstack((self.state_list_3,self.state_3))
+          self.state_list_3 = np.delete(self.state_list_3,0,0)
+          action_1 = self.model.test_get_action_3(self.return_state_3,self.state_list_3)#ここまでに欲しい。
           self.duration_time_of_UAV_1=1
           self.total_duration_time_of_UAV_1 += 1
-            
+
         else:
+          self.state_3 = [self.time_slot,self.agent_pos_1[0],self.agent_pos_1[1]]
           for iS in range(amount_SN):
             self.AoI_list_UAV_1[iS] = min(self.AoI_list[iS],self.AoI_list_UAV_1[iS])
-          self.duration_time_of_UAV_1 = 0
+            self.state_3.append(self.AoI_list_UAV_1[iS])
+          self.state_3 = np.array(self.state_3)
+          self.state_list_3 = np.vstack((self.state_list_3,self.state_3))
+          self.state_list_3 = np.delete(self.state_list_3,0,0)
+          self.duration_time_of_UAV_1=0
+
+        #hidden_3_outputs(self,return_state,state_1_list):
+        self.return_state_3 = self.model.hidden_3_outputs(self.return_state_3,self.state_list_3)
+
 
 
         #遠隔制御判定_UAV_2
-        if 300<=self.agent_pos_2[0]<=400:
-          self.state_list_4 = [self.time_slot,self.agent_pos_2[0],self.agent_pos_2[1]]
+        if  300<=self.agent_pos_2[0]<=400:
+          self.state_4 = [self.time_slot,self.agent_pos_2[0],self.agent_pos_2[1]]
           for iS in range(amount_SN):
-            self.state_list_4.append(self.AoI_list_UAV_2[iS])
-          self.state_list_4 = np.array(self.state_list_4)
-          action_2 = self.model.test_get_action_4(self.state_list_4)
+            self.state_4.append(self.AoI_list_UAV_2[iS])
+          self.state_4 = np.array(self.state_4)
+          self.state_list_4 = np.vstack((self.state_list_4,self.state_4))
+          self.state_list_4 = np.delete(self.state_list_4,0,0)
+          action_2 = self.model.test_get_action_4(self.return_state_4,self.state_list_4)#ここまでに欲しい。
           self.duration_time_of_UAV_2=1
           self.total_duration_time_of_UAV_2 += 1
 
+
         else:
+          self.state_4 = [self.time_slot,self.agent_pos_2[0],self.agent_pos_2[1]]
           for iS in range(amount_SN):
             self.AoI_list_UAV_2[iS] = min(self.AoI_list[iS],self.AoI_list_UAV_2[iS])
-          self.duration_time_of_UAV_2 = 0
+            self.state_4.append(self.AoI_list_UAV_2[iS])
+          self.state_4 = np.array(self.state_4)
+          self.state_list_4 = np.vstack((self.state_list_4,self.state_4))
+          self.state_list_4 = np.delete(self.state_list_4,0,0)
+          self.duration_time_of_UAV_2=0
+
+
+        #hidden_4_outputs(self,return_state,state_1_list):
+        self.return_state_4 = self.model.hidden_4_outputs(self.return_state_4,self.state_list_4)
+
 
         #遠隔制御判定
         self.reward_1=0
@@ -483,37 +513,32 @@ class AoI(gym.Env): # (1)
           #print(self.duration_time_of_UAV_2)
 
 
-        #if self.duration_time_of_UAV_1 == args.duration_threshold:
-          #self.duration_time_of_UAV_1=0
-        #if self.duration_time_of_UAV_2 == args.duration_threshold:
-          #self.duration_time_of_UAV_2=0
+        self.duration_time_of_UAV_1=0
+        self.duration_time_of_UAV_2=0
 
 
         #ここでUAVからBSでの判定。
 
-
-        #遠隔制御判定_UAV_1
-        #self.com_poor_1 = np.random.random()
-        #self.com_poor_2 = np.random.random()
         self.state_AoI_list = self.AoI_list
-        if 300<=self.agent_pos_1[0]<=400:
+        #遠隔制御判定_UAV_1
+        if  300<=self.agent_pos_1[0]<=400:
           self.duration_time_of_UAV_1=1
         else:
           self.duration_time_of_UAV_1=0
         if self.duration_time_of_UAV_1==0:
           self.fix_pos_1 = [self.agent_pos_1[0],self.agent_pos_1[1]]
           for iS in range(self.amount_SN):
-            self.state_AoI_list[iS]=min(self.AoI_list_UAV_1[iS],self.state_AoI_list[iS])
+            self.state_AoI_list[iS] = min(self.AoI_list_UAV_1[iS],self.state_AoI_list[iS])          
 
 
-        if 300<=self.agent_pos_2[0]<=400:
+        if  300<=self.agent_pos_2[0]<=400:
           self.duration_time_of_UAV_2=1
         else:
           self.duration_time_of_UAV_2=0
         if self.duration_time_of_UAV_2==0:
           self.fix_pos_2 = [self.agent_pos_2[0],self.agent_pos_2[1]]
           for iS in range(self.amount_SN):
-            self.state_AoI_list[iS]=min(self.AoI_list_UAV_2[iS],self.state_AoI_list[iS])
+            self.state_AoI_list[iS] = min(self.AoI_list_UAV_2[iS],self.state_AoI_list[iS])          
 
         #print(self.agent_pos_1[0],self.agent_pos_1[1],self.agent_pos_2[0],self.agent_pos_2[1],self.duration_time_of_UAV_1,self.duration_time_of_UAV_2)
         #print(self.AoI_list_UAV_1,self.AoI_list_UAV_2)
@@ -539,30 +564,10 @@ class AoI(gym.Env): # (1)
         self.data_list = [[self.total_duration_time_of_UAV_1,self.local_collection_times_1,self.reward_1,self.BS_reward_1,self.D_1_list],[self.total_duration_time_of_UAV_2,self.local_collection_times_2,self.reward_2,self.BS_reward_2,self.D_2_list],self.check_list]
 
         return self.next_state, self.reward, self.done, self.AoI_list,self.U_list, self.data_list,{}
-    
-    
+
+      
 def exp_dist(lambda_, x):
     return 1-np.exp(- lambda_*x)
-
-
-def res_actions(x,y):
-  res_actions_list = [0,1,2,3]
-  if x == 400:
-    res_actions_list.remove(0)
-  elif x == 0:
-    res_actions_list.remove(1)
-  else:
-    pass
-  if y == 400:
-    res_actions_list.remove(2)
-  elif y == 0:
-    res_actions_list.remove(3)
-  else:
-    pass
-  res_actions_list = np.array(res_actions_list)
-  #print(res_actions_list)
-  return res_actions_list
-
 
 def res_actions_MADQN(x_1,y_1,x_2,y_2):
   res_actions_list_1 = [0,1,2,3]
@@ -605,6 +610,25 @@ def res_actions_MADQN(x_1,y_1,x_2,y_2):
   return res_actions_list
 
 
+def res_actions(x,y):
+  res_actions_list = [0,1,2,3]
+  if x == 400:
+    res_actions_list.remove(0)
+  elif x == 0:
+    res_actions_list.remove(1)
+  else:
+    pass
+  if y == 400:
+    res_actions_list.remove(2)
+  elif y == 0:
+    res_actions_list.remove(3)
+  else:
+    pass
+  res_actions_list = np.array(res_actions_list)
+  #print(res_actions_list)
+  return res_actions_list
+
+
 #targets[range(args.batch_size), actions]
 def res_output_layers(outputs,res_actions_list):
   res_outputs = np.empty((2,len(res_actions_list)))
@@ -629,14 +653,36 @@ def choose_res_action(res_outputs):
 
 
 class ActionStateModel:
+    file_name_1 = file_name_1
+    file_name_2 = file_name_2
+    result_dir_1 = result_dir_1
+    result_dir_2 = result_dir_2
+
     def __init__(self, state_dim, aciton_dim):
         self.state_dim  = state_dim
         self.action_dim = aciton_dim
+        self.result_dir_1 = result_dir_1
+        self.file_name_1 = file_name_1
+        self.result_dir_2 = result_dir_2
+        self.file_name_2 = file_name_2
 
         self.model_1 = self.create_model_1()
         self.model_2 = self.create_model_1()
+        self.model_1.load_weights(os.path.join(self.result_dir_1, str(self.file_name_1)+"_model.h5"))
+        #self.model_2.load_weights(os.path.join(self.result_dir_1, str(self.file_name_1)+"_model_2.h5"))
+        #print(str(self.file_name_1))
+
+
         self.model_3 = self.create_model_2()
         self.model_4 = self.create_model_2()
+        self.model_3.load_weights(os.path.join(self.result_dir_2, str(self.file_name_2)+"_model_1.h5"))
+        self.model_4.load_weights(os.path.join(self.result_dir_2, str(self.file_name_2)+"_model_2.h5"))
+
+        self.hidden_layer_model_3 = Model(inputs=self.model_3.input,outputs=self.model_3.get_layer('Layer_0').output)
+        self.hidden_layer_model_4 = Model(inputs=self.model_4.input,outputs=self.model_4.get_layer('Layer_0').output)
+
+        #print(str(self.file_name_2))
+
 
     def create_model_1(self):
         model = tf.keras.Sequential([
@@ -651,7 +697,8 @@ class ActionStateModel:
 
     def create_model_2(self):
         model = tf.keras.Sequential([
-            InputLayer((self.state_dim-2,)),
+            InputLayer(((self.state_dim - 2)*5+self.state_dim*1,)),
+            Dense(self.state_dim*1, activation='relu',name='Layer_0'),
             Dense(200, activation='relu'),
             Dense(200, activation='relu'),
             Dense(200, activation='relu'),
@@ -659,7 +706,24 @@ class ActionStateModel:
         ])
         model.compile(loss='mse',metrics='mae', optimizer=Adam(args.lr))
         return model
-    
+
+    def hidden_3_outputs(self,return_state,state_1_list):
+        return_state = np.reshape(return_state, [1, self.state_dim*1])
+        state_1_list =np.reshape(state_1_list, [1, (self.state_dim-2)*5])
+        state_1_list_append = np.append(state_1_list,return_state)
+        state_1_list_append = np.reshape(state_1_list_append, [1, len(state_1_list_append)])
+        return self.hidden_layer_model_3.predict_on_batch(state_1_list_append) 
+
+    def hidden_4_outputs(self,return_state,state_2_list):
+        return_state = np.reshape(return_state, [1, self.state_dim*1])
+        state_2_list =np.reshape(state_2_list, [1, (self.state_dim-2)*5])
+        state_2_list_append = np.append(state_2_list,return_state)
+        state_2_list_append = np.reshape(state_2_list_append, [1, len(state_2_list_append)])
+        return self.hidden_layer_model_4.predict_on_batch(state_2_list_append)
+
+
+
+
     def test_get_action(self, state):
         state = np.reshape(state, [1, self.state_dim])
         res_actions_list = res_actions_MADQN(state[0][0+1],state[0][1+1],state[0][2+1],state[0][3+1])
@@ -669,22 +733,28 @@ class ActionStateModel:
         return action#argminへの変更も忘れずに！！
 
 
-    def test_get_action_3(self, state):
-        state = np.reshape(state, [1, self.state_dim-2])
-        res_actions_list = res_actions(state[0][1],state[0][2])
-        q_value = self.model_3.predict_on_batch(state)[0]#まじでここpredictじゃない方がええ気がしてますぅ。        
+    def test_get_action_3(self, return_state, state_list):
+        return_state = np.reshape(return_state, [1, self.state_dim*1])
+        res_actions_list = res_actions(state_list[4][1],state_list[4][2])
+        state_list =np.reshape(state_list, [1, (self.state_dim-2)*5])
+        state_list_append = np.append(state_list,return_state)
+        state_list_append = np.reshape(state_list_append, [1, len(state_list_append)])
+        q_value = self.model_3.predict_on_batch(state_list_append)[0]#まじでここpredictじゃない方がええ気がしてますぅ。
         res_outputs = res_output_layers(q_value,res_actions_list)
         action = choose_res_action(res_outputs)
         return action#argminへの変更も忘れずに！！]
 
-    def test_get_action_4(self, state):
-        state = np.reshape(state, [1, self.state_dim-2])
-        res_actions_list = res_actions(state[0][1],state[0][2])
-        q_value = self.model_4.predict_on_batch(state)[0]#まじでここpredictじゃない方がええ気がしてますぅ。        
+    def test_get_action_4(self, return_state, state_list):
+        return_state = np.reshape(return_state, [1, self.state_dim*1])
+        res_actions_list = res_actions(state_list[4][1],state_list[4][2])
+        state_list =np.reshape(state_list, [1, (self.state_dim-2)*5])
+        state_list_append = np.append(state_list,return_state)
+        state_list_append = np.reshape(state_list_append, [1, len(state_list_append)])
+        q_value = self.model_4.predict_on_batch(state_list_append)[0]#まじでここpredictじゃない方がええ気がしてますぅ。
         res_outputs = res_output_layers(q_value,res_actions_list)
         action = choose_res_action(res_outputs)
-        return action#argminへの変更も忘れずに！！]       
-      
+        return action#argminへの変更も忘れずに！！]
+
 class Agent:
     result_dir=result_dir
     def __init__(self, env):
@@ -701,9 +771,6 @@ class Agent:
 
 
     def test_1(self, max_episodes=10):
-        self.model.model_1.load_weights(os.path.join(self.result_dir_1, str(self.file_name_1)+"_model.h5"))
-        #self.model.model_2.load_weights(os.path.join(self.result_dir_1, str(self.file_name_1)+"_model_2.h5"))
-        #print(str(self.file_name_1))
         total_test_reward_list=[]
         total_average_AoI_list=[]
         total_time_UAV_1 = []
@@ -789,7 +856,7 @@ class Agent:
             else:
               total_average_reward_1_collection_times.append(0)
               total_average_BS_reward_1_collection_times.append(0)
-
+                                            
             average_reward_2_duration_time = None
             average_reward_2_duration_time = None
             proportion_collection_times_2_to_duration_time = None
@@ -800,6 +867,7 @@ class Agent:
               total_average_BS_reward_2_duration_time.append(average_BS_reward_2_duration_time)            
               proportion_collection_times_2_to_duration_time=data[1][1]/data[1][0]
               total_proportion_collection_times_2_to_duration_time.append(proportion_collection_times_2_to_duration_time)
+            
 
             average_reward_2_collection_times = None
             average_reward_2_collection_times = None
@@ -812,7 +880,7 @@ class Agent:
               total_average_reward_2_collection_times.append(0)
               total_average_BS_reward_2_collection_times.append(0)
                 
-
+            
 
             ######AoI_list=[int(state[1+2*2+i]) for i in range(amount_SN)]
             
@@ -839,10 +907,10 @@ class Agent:
             #total_proportion_collection_times_1_to_duration_time = []
         #print('UAV_1:{}①:{}②:{}③:{}④:{}⑤:{}'.format(statistics.mean(total_time_UAV_1),statistics.mean(total_average_reward_1_duration_time),statistics.mean(total_average_BS_reward_1_duration_time),statistics.mean(total_average_reward_1_collection_times),statistics.mean(total_average_BS_reward_1_collection_times),statistics.mean(total_proportion_collection_times_1_to_duration_time)))
         #print('UAV_2:{}①:{}②:{}③:{}④:{}⑤:{}'.format(statistics.mean(total_time_UAV_2),statistics.mean(total_average_reward_2_duration_time),statistics.mean(total_average_BS_reward_2_duration_time),statistics.mean(total_average_reward_2_collection_times),statistics.mean(total_average_BS_reward_2_collection_times),statistics.mean(total_proportion_collection_times_2_to_duration_time)))
-        #print()
         con_data =[[statistics.mean(total_test_reward_list),min(total_test_reward_list),max(total_test_reward_list)],[statistics.mean(total_time_UAV_1),statistics.mean(total_average_reward_1_duration_time),statistics.mean(total_average_BS_reward_1_duration_time),statistics.mean(total_average_reward_1_collection_times),statistics.mean(total_average_BS_reward_1_collection_times),statistics.mean(total_proportion_collection_times_1_to_duration_time)],[statistics.mean(total_time_UAV_2),statistics.mean(total_average_reward_2_duration_time),statistics.mean(total_average_BS_reward_2_duration_time),statistics.mean(total_average_reward_2_collection_times),statistics.mean(total_average_BS_reward_2_collection_times),statistics.mean(total_proportion_collection_times_2_to_duration_time)]]
         print(con_data)
-
+        #print()
+        
         #print('average_episode_test_reward:'+str(sum(total_test_reward_list)/max_episodes))
         #print('average_episode_sum_AoI:'+str(sum(total_average_AoI_list)/max_episodes))
         #print('min_average_AoI:',min(total_test_reward_list))
@@ -870,16 +938,14 @@ class Agent:
         f.write('con_data:\n')
         f.write(str(con_data))
         f.close()
-
-
-
-
+        
 file_name_1 = '5_0_e_5_timeslot'
 result_dir_1 = '/content/drive/MyDrive/modi_env/MADQN/9000_3times/200/SN'+str(args.amount_SN)+'/'+str(file_name_1)
-file_name_2 = '1_0_e_3_timeslot'
+file_name_2 = '1_0_e_4_timeslot'
+result_dir_2 = '/content/drive/MyDrive/modi_env/improve_R_MADQN/epsilon/5state_1reccurent/modify/200/SN'+str(args.amount_SN)+'/'+str(file_name_2)
 file_name = 'another_change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_first_and_first'
-result_dir_2 = '/content/drive/MyDrive/modi_env/no_DQN_for_MARL/epsilon/SN'+str(args.amount_SN)+'/'+str(file_name_2)
-result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_No_DQN_for_MARL/'+str(file_name)
+#file_name ='check'
+result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_R_MADQN/'+str(file_name)
 if not os.path.exists(result_dir):
     os.mkdir(result_dir)
 def main_1_1():
@@ -889,10 +955,10 @@ def main_1_1():
 if __name__ == "__main__":
    main_1_1()
 
-file_name_2 = '1_0_e_3_timeslot_again'
-result_dir_2 = '/content/drive/MyDrive/modi_env/no_DQN_for_MARL/epsilon/SN'+str(args.amount_SN)+'/'+str(file_name_2)
+file_name_2 = '1_0_e_4_timeslot_again'
+result_dir_2 = '/content/drive/MyDrive/modi_env/improve_R_MADQN/epsilon/5state_1reccurent/modify/200/SN'+str(args.amount_SN)+'/'+str(file_name_2)
 file_name = 'another_change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_first_and_second'
-result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_No_DQN_for_MARL/'+str(file_name)
+result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_R_MADQN/'+str(file_name)
 if not os.path.exists(result_dir):
     os.mkdir(result_dir)
 def main_1_2():
@@ -902,10 +968,10 @@ def main_1_2():
 if __name__ == "__main__":
    main_1_2()
 
-file_name_2 = '1_0_e_3_timeslot_third'
-result_dir_2 = '/content/drive/MyDrive/modi_env/no_DQN_for_MARL/epsilon/SN'+str(args.amount_SN)+'/'+str(file_name_2)
+file_name_2 = '1_0_e_4_timeslot_third'
+result_dir_2 = '/content/drive/MyDrive/modi_env/improve_R_MADQN/epsilon/5state_1reccurent/modify/200/SN'+str(args.amount_SN)+'/'+str(file_name_2)
 file_name = 'another_change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_first_and_third'
-result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_No_DQN_for_MARL/'+str(file_name)
+result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_R_MADQN/'+str(file_name)
 if not os.path.exists(result_dir):
     os.mkdir(result_dir)
 def main_1_3():
@@ -919,10 +985,10 @@ if __name__ == "__main__":
 
 file_name_1 = '5_0_e_5_timeslot_again'
 result_dir_1 = '/content/drive/MyDrive/modi_env/MADQN/9000_3times/200/SN'+str(args.amount_SN)+'/'+str(file_name_1)
-file_name_2 = '1_0_e_3_timeslot'
-result_dir_2 = '/content/drive/MyDrive/modi_env/no_DQN_for_MARL/epsilon/SN'+str(args.amount_SN)+'/'+str(file_name_2)
+file_name_2 = '1_0_e_4_timeslot'
+result_dir_2 = '/content/drive/MyDrive/modi_env/improve_R_MADQN/epsilon/5state_1reccurent/modify/200/SN'+str(args.amount_SN)+'/'+str(file_name_2)
 file_name = 'another_change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_second_and_first'
-result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_No_DQN_for_MARL/'+str(file_name)
+result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_R_MADQN/'+str(file_name)
 if not os.path.exists(result_dir):
     os.mkdir(result_dir)
 def main_2_1():
@@ -932,10 +998,10 @@ def main_2_1():
 if __name__ == "__main__":
    main_2_1()
 
-file_name_2 = '1_0_e_3_timeslot_again'
-result_dir_2 = '/content/drive/MyDrive/modi_env/no_DQN_for_MARL/epsilon/SN'+str(args.amount_SN)+'/'+str(file_name_2)
+file_name_2 = '1_0_e_4_timeslot_again'
+result_dir_2 = '/content/drive/MyDrive/modi_env/improve_R_MADQN/epsilon/5state_1reccurent/modify/200/SN'+str(args.amount_SN)+'/'+str(file_name_2)
 file_name = 'another_change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_second_and_second'
-result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_No_DQN_for_MARL/'+str(file_name)
+result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_R_MADQN/'+str(file_name)
 if not os.path.exists(result_dir):
     os.mkdir(result_dir)
 def main_2_2():
@@ -945,10 +1011,10 @@ def main_2_2():
 if __name__ == "__main__":
    main_2_2()
 
-file_name_2 = '1_0_e_3_timeslot_third'
-result_dir_2 = '/content/drive/MyDrive/modi_env/no_DQN_for_MARL/epsilon/SN'+str(args.amount_SN)+'/'+str(file_name_2)
+file_name_2 = '1_0_e_4_timeslot_third'
+result_dir_2 = '/content/drive/MyDrive/modi_env/improve_R_MADQN/epsilon/5state_1reccurent/modify/200/SN'+str(args.amount_SN)+'/'+str(file_name_2)
 file_name = 'another_change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_second_and_third'
-result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_No_DQN_for_MARL/'+str(file_name)
+result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_R_MADQN/'+str(file_name)
 if not os.path.exists(result_dir):
     os.mkdir(result_dir)
 def main_2_3():
@@ -961,10 +1027,10 @@ if __name__ == "__main__":
 
 file_name_1 = '5_0_e_5_timeslot_third'
 result_dir_1 = '/content/drive/MyDrive/modi_env/MADQN/9000_3times/200/SN'+str(args.amount_SN)+'/'+str(file_name_1)
-file_name_2 = '1_0_e_3_timeslot'
-result_dir_2 = '/content/drive/MyDrive/modi_env/no_DQN_for_MARL/epsilon/SN'+str(args.amount_SN)+'/'+str(file_name_2)
+file_name_2 = '1_0_e_4_timeslot'
+result_dir_2 = '/content/drive/MyDrive/modi_env/improve_R_MADQN/epsilon/5state_1reccurent/modify/200/SN'+str(args.amount_SN)+'/'+str(file_name_2)
 file_name = 'another_change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_third_and_first'
-result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_No_DQN_for_MARL/'+str(file_name)
+result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_R_MADQN/'+str(file_name)
 if not os.path.exists(result_dir):
     os.mkdir(result_dir)
 def main_3_1():
@@ -974,10 +1040,10 @@ def main_3_1():
 if __name__ == "__main__":
    main_3_1()
 
-file_name_2 = '1_0_e_3_timeslot_again'
-result_dir_2 = '/content/drive/MyDrive/modi_env/no_DQN_for_MARL/epsilon/SN'+str(args.amount_SN)+'/'+str(file_name_2)
+file_name_2 = '1_0_e_4_timeslot_again'
+result_dir_2 = '/content/drive/MyDrive/modi_env/improve_R_MADQN/epsilon/5state_1reccurent/modify/200/SN'+str(args.amount_SN)+'/'+str(file_name_2)
 file_name = 'another_change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_third_and_second'
-result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_No_DQN_for_MARL/'+str(file_name)
+result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_R_MADQN/'+str(file_name)
 if not os.path.exists(result_dir):
     os.mkdir(result_dir)
 def main_3_2():
@@ -987,10 +1053,10 @@ def main_3_2():
 if __name__ == "__main__":
    main_3_2()
 
-file_name_2 = '1_0_e_3_timeslot_third'
-result_dir_2 = '/content/drive/MyDrive/modi_env/no_DQN_for_MARL/epsilon/SN'+str(args.amount_SN)+'/'+str(file_name_2)
+file_name_2 = '1_0_e_4_timeslot_third'
+result_dir_2 = '/content/drive/MyDrive/modi_env/improve_R_MADQN/epsilon/5state_1reccurent/modify/200/SN'+str(args.amount_SN)+'/'+str(file_name_2)
 file_name = 'another_change_1000_'+str(int(100*args.threshold))+'_'+str(args.duration_threshold)+'_third_and_third'
-result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_No_DQN_for_MARL/'+str(file_name)
+result_dir = '/content/drive/MyDrive/modi_env/total_system/SN'+str(args.amount_SN)+'/MADQN_and_R_MADQN/'+str(file_name)
 if not os.path.exists(result_dir):
     os.mkdir(result_dir)
 def main_3_3():
@@ -998,4 +1064,4 @@ def main_3_3():
     agent = Agent(env)
     agent.test_1(max_episodes=1000)
 if __name__ == "__main__":
-   main_3_3()
+   main_3_3()                
