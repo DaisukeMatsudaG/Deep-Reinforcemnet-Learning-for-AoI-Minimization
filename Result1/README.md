@@ -1,6 +1,6 @@
 These files are results of the directory **Environment1**
 
-#Description
+# Description
 The directory name is the method of Deep Reinforcement Learning in **Environment1**.
 
 And each directory has the result directory of each learning rate."
