@@ -32,7 +32,3 @@ To decide the trajectory, Deep Reinforcement Learning is a good method and usefu
 
 !Becareful!
 If you clone this repository to google colab, it doesn't work due to tensorflow version. You have to use tensorflow-version-2.2. Tensorflow Version 2.5 is mainly used in our repository.
-
-# Acknowledgemen
-
-
