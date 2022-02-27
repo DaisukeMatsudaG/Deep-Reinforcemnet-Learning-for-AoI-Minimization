@@ -30,7 +30,7 @@ import os
 #from google.colab import files
 #from google.colab import drive
 #drive.mount('/content/drive')
-#import wandb#ここの環境だけ自分で何とかしましょう！！
+#import wandb
 !pip install tensorflow==2.5.0
 import tensorflow as tf
 print('TensorFlow', tf.__version__)
@@ -617,13 +617,12 @@ class Agent:
             
 
 def main():
-    env = AoI()#ここを私のに変えましょうぜい✊✊✊
+    env = AoI()
     agent = Agent(env)
     agent.train(max_episodes=args.train_ep)
     #agent.train(max_episodes=21)
     agent.test(max_episodes=100)
 
-#lossの出現割る数、直そうね。
 if __name__ == "__main__":
    main()
 #q_network.main_network.save_weights(os.path.join(result_dir, 'model_3.h5'))
