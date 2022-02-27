@@ -21,6 +21,8 @@ To decide the trajectory, Deep Reinforcement Learning is a good method and usefu
 | Results2  |  Experiment results of **Environment2**  |
 | Results3  |  Experiment results of **Latency**  |
 | Results4  |  Experiment results of **Combination**  |
+| grouph.ipynb  |  Experiment grouph of **Environment1 & Environment2**  |
+
 
 # Experiment
 1.Make the directory to your google drive.
