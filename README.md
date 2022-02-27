@@ -25,8 +25,11 @@ To decide the trajectory, Deep Reinforcement Learning is a good method and usefu
 
 # Experiment
 1.Make the directory to your google drive.
+
 2.Copy the Experiment file .py to google colab and the change the name of diretory name in the .py file.
+
 3.Execute the google colab file.
+
 # Acknowledgemen
 
 
