@@ -1,3 +1,5 @@
+These file is for the Environment 1 which is described in my Master paper.
+
 # .py file
 File name shows the name of Deep Reinforcement Learning Method.
 If you execute one file, you can get the trained model and execute results of Age of Information values in one episodes.
