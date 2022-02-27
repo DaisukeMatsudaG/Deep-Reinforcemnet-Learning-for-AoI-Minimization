@@ -16,8 +16,8 @@ To decide the trajectory, Deep Reinforcement Learning is a good method and usefu
 | --  |  --  |
 | Environment1  |  Train the model and execute the trained model about environment1  |
 | Environment2  |  Train the model and execute the trained model about environment2  |
-| Latency  |  The latency of the Neural Network model trained at **Environment2**  |
-| Combination  |  Control UAVs with trained model at **Environment2**  |
+| Latency  |  The latency of the Neural Network model trained in **Environment2**  |
+| Combination  |  Control UAVs with trained model in **Environment2**  |
 | Results1  |  Experiment results of **Environment1**  |
 | Results2  |  Experiment results of **Environment2**  |
 | Results3  |  Experiment results of **Latency**  |
